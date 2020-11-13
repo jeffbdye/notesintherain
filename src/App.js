@@ -4,6 +4,9 @@ import ReactAudioPlayer from 'react-audio-player';
 import './App.css';
 
 function App() {
+  const [playing, setPlaying] = useState(false)
+  const [bg, setBg] = useState('#415976');
+  const [noteInterval, setNoteInterval] = useState(null);
   const first = useRef(null);
   const second = useRef(null);
   const note1 = useRef(null);
@@ -47,6 +50,10 @@ function App() {
         offsetTotal = offsetChoice === 0 ? 0: offsetTotal + offsets[index];
         notes[index].current.audioEl.current.src = file;
         setTimeout(() => {
+          const bgOptions = ['#415976a6', '#add9ce', '#2492b1', '#125e8f', '#bae5d8', '#41597666'];
+          const bgChange = bgOptions[Math.floor(Math.random() * Math.floor(6))];
+          setBg(bgChange);
+          setTimeout(() => setBg('#415976'), 100);
           notes[index].current.audioEl.current.play()
         }, offsetTotal * 1000)
       });
@@ -54,29 +61,45 @@ function App() {
   }
 
   useEffect( () => {
-    setInterval(playNotes, 7500)
+    first.current.audioEl.current.play();
+    setPlaying(true);
+    setNoteInterval(setInterval(playNotes, 7500));
   }, [])
+
+  const pause = () => {
+    setPlaying(false);
+    setTransitioning(false);
+    first.current.audioEl.current.pause();
+    second.current.audioEl.current.pause();
+    first.current.audioEl.current.currentTime = 0;
+    second.current.audioEl.current.currentTime = 0;
+    clearInterval(noteInterval);
+    setNoteInterval(null);
+  }
+
+  const play = () => {
+    setPlaying(true);
+    first.current.audioEl.current.play();
+    setNoteInterval(setInterval(playNotes, 7500));
+  }
   
   return (
     <div className="App">
+      <div style={{background: bg}} className="container">
+        {playing ? <img onClick={pause} className="image" src={'tears.gif'}/> : <img onClick={play} className="image" src={'tears.png'}/>}
+      </div>
       <ReactAudioPlayer
         src="rain.mp3"
-        autoPlay
-        controls
         listenInterval={1000}
         onListen={(time) => onListen(time, true)}
         ref={first}
       />
       <ReactAudioPlayer
         src="rain.mp3"
-        controls
         ref={second}
         listenInterval={1000}
         onListen={(time) => onListen(time, false)}
       />
-      <div onClick={playNotes}>
-        BEGIN
-      </div>
       <ReactAudioPlayer
         ref={note1}
         src={'notes/pipa/1.mp3'}
