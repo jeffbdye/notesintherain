@@ -2,11 +2,13 @@ import logo from './logo.svg';
 import { useRef, useState, useEffect } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import './App.css';
-
+var interval = null;
 function App() {
   const [playing, setPlaying] = useState(false)
+  const [instrument, setInstrument] = useState({name: 'pipa', fileCount: 25})
   const [bg, setBg] = useState('#415976');
-  const [noteInterval, setNoteInterval] = useState(null);
+  // const [noteInterval, setNoteInterval] = useState(null);
+  // let noteInterval = null;
   const first = useRef(null);
   const second = useRef(null);
   const note1 = useRef(null);
@@ -40,8 +42,8 @@ function App() {
       const offsets = [];
       const offsetChoice = Math.floor(Math.random() * Math.floor(4));
       for (let i = 0; i < numberOfNotes; i++) {
-        const fileNumber = 1 + Math.floor(Math.random() * Math.floor(25));
-        files[i] = `notes/pipa/${fileNumber}.mp3`;
+        const fileNumber = 1 + Math.floor(Math.random() * Math.floor(instrument.fileCount));
+        files[i] = `notes/${instrument.name}/${fileNumber}.mp3`;
         offsets[i] = offsetChoice !== 3 ? offsetChoice : .5 + Math.random();
       }
       //1 second between each, 2 seconds between each, random for each
@@ -63,8 +65,18 @@ function App() {
   useEffect( () => {
     first.current.audioEl.current.play();
     setPlaying(true);
-    setNoteInterval(setInterval(playNotes, 7500));
+    interval = setInterval(playNotes, 7500);
+    console.log(interval)
+    // setNoteInterval(interval)
   }, [])
+
+  useEffect( () => {
+    clearInterval(interval);
+    // setNoteInterval(null);
+    interval = setInterval(playNotes, 7500);
+    // setNoteInterval(setInterval(playNotes, 7500))
+    // setNoteInterval(interval);
+  }, [instrument])
 
   const pause = () => {
     setPlaying(false);
@@ -73,20 +85,35 @@ function App() {
     second.current.audioEl.current.pause();
     first.current.audioEl.current.currentTime = 0;
     second.current.audioEl.current.currentTime = 0;
-    clearInterval(noteInterval);
-    setNoteInterval(null);
+    console.log(interval)
+    clearInterval(interval);
+    // setNoteInterval(null);
   }
 
   const play = () => {
     setPlaying(true);
     first.current.audioEl.current.play();
-    setNoteInterval(setInterval(playNotes, 7500));
+    interval = setInterval(playNotes, 7500)
+    // setNoteInterval(setInterval(playNotes, 7500));
   }
   
   return (
     <div className="App">
       <div style={{background: bg}} className="container">
-        {playing ? <img onClick={pause} className="image" src={'tears.gif'}/> : <img onClick={play} className="image" src={'tears.png'}/>}
+        <span className="options">options</span>
+        <div className="instruments">
+          <span className="instrument" style={{textDecoration: (instrument.name === 'vibes' ? 'underline' : 'unset')}} onClick={() => setInstrument({name: 'vibes', fileCount: 18})}>
+            vibraphone
+          </span>
+          <span className="instrument" style={{textDecoration: (instrument.name === 'pipa' ? 'underline' : 'unset')}} onClick={() => setInstrument({name: 'pipa', fileCount: 25})}>
+            pipa
+          </span>
+          <span className="instrument" style={{textDecoration: (instrument.name === 'guzheng' ? 'underline' : 'unset')}} onClick={() => setInstrument({name: 'guzheng', fileCount: 20})}>
+            guzheng
+          </span>
+        </div>
+
+        {playing ? <img onClick={() => pause()} className="image" src={'tears.gif'}/> : <img onClick={() => play()} className="image" src={'tears.png'}/>}
       </div>
       <ReactAudioPlayer
         src="rain.mp3"

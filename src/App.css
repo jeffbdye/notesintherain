@@ -10,6 +10,26 @@
   align-items: center;
   background: #415976;
   transition: background .5s cubic-bezier(0.39, 0.58, 0.57, 1);
+  overflow: hidden;
+}
+.options {
+  position: absolute;
+  top: calc(50vh + 116px);
+  left: 50vw;
+  color: #ade6d6;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+}
+.instrument {
+  margin: 0 8px 0 8px;
+}
+.instruments {
+  position: absolute;
+  top: calc(50vh + 137px);
+  left: calc(50vw + -9px);
+  font-weight: 300;
+  color: #ade6d6;
+  cursor: pointer;
 }
 
 .image {
