@@ -7,8 +7,6 @@ function App() {
   const [playing, setPlaying] = useState(false)
   const [instrument, setInstrument] = useState({name: 'pipa', fileCount: 25})
   const [bg, setBg] = useState('#415976');
-  // const [noteInterval, setNoteInterval] = useState(null);
-  // let noteInterval = null;
   const first = useRef(null);
   const second = useRef(null);
   const note1 = useRef(null);
@@ -63,19 +61,10 @@ function App() {
   }
 
   useEffect( () => {
-    first.current.audioEl.current.play();
-    setPlaying(true);
-    interval = setInterval(playNotes, 7500);
-    console.log(interval)
-    // setNoteInterval(interval)
-  }, [])
-
-  useEffect( () => {
     clearInterval(interval);
-    // setNoteInterval(null);
-    interval = setInterval(playNotes, 7500);
-    // setNoteInterval(setInterval(playNotes, 7500))
-    // setNoteInterval(interval);
+    if (playing) {
+      interval = setInterval(playNotes, 7500);
+    }
   }, [instrument])
 
   const pause = () => {
@@ -87,14 +76,12 @@ function App() {
     second.current.audioEl.current.currentTime = 0;
     console.log(interval)
     clearInterval(interval);
-    // setNoteInterval(null);
   }
 
   const play = () => {
     setPlaying(true);
     first.current.audioEl.current.play();
     interval = setInterval(playNotes, 7500)
-    // setNoteInterval(setInterval(playNotes, 7500));
   }
   
   return (
