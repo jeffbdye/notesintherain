@@ -39,6 +39,10 @@
   cursor: pointer;
 }
 
+.volume {
+  display: flex;
+  align-items: flex-start;
+}
 
 .App-logo {
   height: 40vmin;

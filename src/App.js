@@ -7,6 +7,7 @@ function App() {
   const [playing, setPlaying] = useState(false);
   const [instrument, setInstrument] = useState({ name: 'pipa', fileCount: 25 });
   const [bg, setBg] = useState('#415976');
+  const [rainVolume, setRainVolume] = useState(.5);
   const first = useRef(null);
   const second = useRef(null);
   const note1 = useRef(null);
@@ -84,6 +85,11 @@ function App() {
     interval = setInterval(playNotes, 7500);
   }
 
+  const onRainVolumeChange = (event) => {
+    const vol = parseFloat(event.target.value);
+    setRainVolume(vol);
+  }
+
   return (
     <div className="App">
       <div style={{ background: bg }} className="container">
@@ -100,6 +106,11 @@ function App() {
             guzheng
           </span>
         </div>
+        <div className="option-section">volume</div>
+        <div className="volume">
+          <label className="option-label">rain</label>
+          <input type="range" min="0" max="1.0" step="0.01" value={rainVolume} onChange={onRainVolumeChange}></input>
+        </div>
 
       </div>
       <ReactAudioPlayer
@@ -107,12 +118,14 @@ function App() {
         listenInterval={1000}
         onListen={(time) => onListen(time, true)}
         ref={first}
+        volume={rainVolume}
       />
       <ReactAudioPlayer
         src="rain.mp3"
         listenInterval={1000}
         onListen={(time) => onListen(time, false)}
         ref={second}
+        volume={rainVolume}
       />
       <ReactAudioPlayer
         ref={note1}
