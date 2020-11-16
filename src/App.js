@@ -87,8 +87,9 @@ function App() {
   return (
     <div className="App">
       <div style={{ background: bg }} className="container">
-        <span className="options">options</span>
-        <div className="instruments">
+        {playing ? <img onClick={() => pause()} className="image" src={'tears.gif'} /> : <img onClick={() => play()} className="image" src={'tears.png'} />}
+        <div className="option-section">options</div>
+        <div className="instruments option-label">
           <span className="instrument" style={{ textDecoration: (instrument.name === 'vibes' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'vibes', fileCount: 18 })}>
             vibraphone
           </span>
@@ -100,7 +101,6 @@ function App() {
           </span>
         </div>
 
-        {playing ? <img onClick={() => pause()} className="image" src={'tears.gif'} /> : <img onClick={() => play()} className="image" src={'tears.png'} />}
       </div>
       <ReactAudioPlayer
         src="rain.mp3"
