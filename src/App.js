@@ -96,15 +96,15 @@ function App() {
         {playing ? <img onClick={() => pause()} className="image" src={'tears.gif'} /> : <img onClick={() => play()} className="image" src={'tears.png'} />}
         <div className="option-section">options</div>
         <div className="instruments option-label">
-          <span className="instrument" style={{ textDecoration: (instrument.name === 'vibes' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'vibes', fileCount: 18 })}>
+          <button className="instrument" style={{ textDecoration: (instrument.name === 'vibes' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'vibes', fileCount: 18 })}>
             vibraphone
-          </span>
-          <span className="instrument" style={{ textDecoration: (instrument.name === 'pipa' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'pipa', fileCount: 25 })}>
+          </button>
+          <button className="instrument" style={{ textDecoration: (instrument.name === 'pipa' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'pipa', fileCount: 25 })}>
             pipa
-          </span>
-          <span className="instrument" style={{ textDecoration: (instrument.name === 'guzheng' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'guzheng', fileCount: 20 })}>
+          </button>
+          <button className="instrument" style={{ textDecoration: (instrument.name === 'guzheng' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'guzheng', fileCount: 20 })}>
             guzheng
-          </span>
+          </button>
         </div>
         <div className="option-section">volume</div>
         <div className="volume">

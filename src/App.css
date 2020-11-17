@@ -31,12 +31,18 @@
   color: #ade6d6;
 }
 
-.instrument {
-  margin: 0 8px 0 8px;
+.option-label button {
+  color: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  cursor: pointer;
 }
 
-.instruments {
-  cursor: pointer;
+.instrument {
+  margin: 0 8px 0 8px;
+  background: none repeat scroll 0 0 transparent;
+  border: medium none;
 }
 
 .volume {
