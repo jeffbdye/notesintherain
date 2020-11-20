@@ -8,31 +8,46 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  overflow: hidden;
   background: #415976;
   transition: background .5s cubic-bezier(0.39, 0.58, 0.57, 1);
-  overflow: hidden;
-}
-.options {
-  position: absolute;
-  top: calc(50vh + 116px);
-  color: #ade6d6;
-  font-family: 'Josefin Sans', sans-serif;
-  font-weight: 600;
-}
-.instrument {
-  margin: 0 8px 0 8px;
-}
-.instruments {
-  position: absolute;
-  top: calc(50vh + 137px);
-  font-weight: 300;
-  color: #ade6d6;
-  cursor: pointer;
 }
 
 .image {
   cursor: pointer;
   border: solid #ade6d6 2px;
+}
+
+.option-section {
+  color: #ade6d6;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  margin: 8px 0px 0px 0px;
+}
+
+.option-label {
+  font-weight: 300;
+  color: #ade6d6;
+}
+
+.option-label button {
+  color: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.instrument {
+  margin: 0 8px 0 8px;
+  background: none repeat scroll 0 0 transparent;
+  border: medium none;
+}
+
+.volume {
+  display: flex;
+  align-items: flex-start;
 }
 
 .App-logo {

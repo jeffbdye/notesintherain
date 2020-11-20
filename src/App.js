@@ -4,9 +4,10 @@ import ReactAudioPlayer from 'react-audio-player';
 import './App.css';
 var interval = null;
 function App() {
-  const [playing, setPlaying] = useState(false)
-  const [instrument, setInstrument] = useState({name: 'pipa', fileCount: 25})
+  const [playing, setPlaying] = useState(false);
+  const [instrument, setInstrument] = useState({ name: 'pipa', fileCount: 25 });
   const [bg, setBg] = useState('#415976');
+  const [rainVolume, setRainVolume] = useState(.5);
   const first = useRef(null);
   const second = useRef(null);
   const note1 = useRef(null);
@@ -14,9 +15,9 @@ function App() {
   const note3 = useRef(null);
   const notes = [note1, note2, note3];
   const [transitioning, setTransitioning] = useState(false);
-  const length = 175;
-  const onListen = (time, isFirst) => {
-    if (!transitioning && Math.abs(length - time) <= 3) {
+  const rainTrackCycleLength = 175;
+  const onListen = (currentPlayTime, isFirst) => {
+    if (!transitioning && Math.abs(rainTrackCycleLength - currentPlayTime) <= 3) {
       setTransitioning(true)
       if (isFirst) {
         second.current.audioEl.current.play();
@@ -27,17 +28,17 @@ function App() {
         second.current.audioEl.current.pause();
         second.current.audioEl.current.currentTime = 0;
       }
-      setTimeout( () => setTransitioning(false), 3000)
+      setTimeout(() => setTransitioning(false), 3000);
     }
-    
+
   }
   const playNotes = () => {
     // const delay = Math.floor(Math.random() * Math.floor(22)) * 1000;
     const delay = 0;
     setTimeout(() => {
       const numberOfNotes = 1 + Math.floor(Math.random() * Math.floor(3));
-      const files = [];
-      const offsets = [];
+      let files = [];
+      let offsets = [];
       const offsetChoice = Math.floor(Math.random() * Math.floor(4));
       for (let i = 0; i < numberOfNotes; i++) {
         const fileNumber = 1 + Math.floor(Math.random() * Math.floor(instrument.fileCount));
@@ -46,8 +47,8 @@ function App() {
       }
       //1 second between each, 2 seconds between each, random for each
       let offsetTotal = 0;
-      files.forEach( (file, index) => {
-        offsetTotal = offsetChoice === 0 ? 0: offsetTotal + offsets[index];
+      files.forEach((file, index) => {
+        offsetTotal = offsetChoice === 0 ? 0 : offsetTotal + offsets[index];
         notes[index].current.audioEl.current.src = file;
         setTimeout(() => {
           const bgOptions = ['#415976a6', '#add9ce', '#2492b1', '#125e8f', '#bae5d8', '#41597666'];
@@ -55,12 +56,12 @@ function App() {
           setBg(bgChange);
           setTimeout(() => setBg('#415976'), 100);
           notes[index].current.audioEl.current.play()
-        }, offsetTotal * 1000)
+        }, offsetTotal * 1000);
       });
     }, delay)
   }
 
-  useEffect( () => {
+  useEffect(() => {
     clearInterval(interval);
     if (playing) {
       interval = setInterval(playNotes, 7500);
@@ -74,45 +75,57 @@ function App() {
     second.current.audioEl.current.pause();
     first.current.audioEl.current.currentTime = 0;
     second.current.audioEl.current.currentTime = 0;
-    console.log(interval)
+    // console.log(interval);
     clearInterval(interval);
   }
 
   const play = () => {
     setPlaying(true);
     first.current.audioEl.current.play();
-    interval = setInterval(playNotes, 7500)
+    interval = setInterval(playNotes, 7500);
   }
-  
+
+  const onRainVolumeChange = (event) => {
+    const vol = parseFloat(event.target.value);
+    setRainVolume(vol);
+  }
+
   return (
     <div className="App">
-      <div style={{background: bg}} className="container">
-        <span className="options">options</span>
-        <div className="instruments">
-          <span className="instrument" style={{textDecoration: (instrument.name === 'vibes' ? 'underline' : 'unset')}} onClick={() => setInstrument({name: 'vibes', fileCount: 18})}>
+      <div style={{ background: bg }} className="container">
+        {playing ? <img onClick={() => pause()} className="image" src={'tears.gif'} /> : <img onClick={() => play()} className="image" src={'tears.png'} />}
+        <div className="option-section">options</div>
+        <div className="instruments option-label">
+          <button className="instrument" style={{ textDecoration: (instrument.name === 'vibes' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'vibes', fileCount: 18 })}>
             vibraphone
-          </span>
-          <span className="instrument" style={{textDecoration: (instrument.name === 'pipa' ? 'underline' : 'unset')}} onClick={() => setInstrument({name: 'pipa', fileCount: 25})}>
+          </button>
+          <button className="instrument" style={{ textDecoration: (instrument.name === 'pipa' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'pipa', fileCount: 25 })}>
             pipa
-          </span>
-          <span className="instrument" style={{textDecoration: (instrument.name === 'guzheng' ? 'underline' : 'unset')}} onClick={() => setInstrument({name: 'guzheng', fileCount: 20})}>
+          </button>
+          <button className="instrument" style={{ textDecoration: (instrument.name === 'guzheng' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'guzheng', fileCount: 20 })}>
             guzheng
-          </span>
+          </button>
+        </div>
+        <div className="option-section">volume</div>
+        <div className="volume">
+          <label className="option-label">rain</label>
+          <input type="range" min="0" max="1.0" step="0.01" value={rainVolume} onChange={onRainVolumeChange}></input>
         </div>
 
-        {playing ? <img onClick={() => pause()} className="image" src={'tears.gif'}/> : <img onClick={() => play()} className="image" src={'tears.png'}/>}
       </div>
       <ReactAudioPlayer
         src="rain.mp3"
         listenInterval={1000}
         onListen={(time) => onListen(time, true)}
         ref={first}
+        volume={rainVolume}
       />
       <ReactAudioPlayer
         src="rain.mp3"
-        ref={second}
         listenInterval={1000}
         onListen={(time) => onListen(time, false)}
+        ref={second}
+        volume={rainVolume}
       />
       <ReactAudioPlayer
         ref={note1}
