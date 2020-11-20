@@ -23,7 +23,7 @@
   color: #ade6d6;
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 600;
-  margin: 8px 0px 0px 0px;
+  margin: 20px 0px 0px 0px;
 }
 
 .option-label {
@@ -39,13 +39,13 @@
   cursor: pointer;
 }
 
-.instrument {
+.option {
   margin: 0 8px 0 8px;
   background: none repeat scroll 0 0 transparent;
   border: medium none;
 }
 
-.volume {
+.section {
   display: flex;
   align-items: flex-start;
 }

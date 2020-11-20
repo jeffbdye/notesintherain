@@ -4,6 +4,7 @@ import ReactAudioPlayer from 'react-audio-player';
 import './App.css';
 var interval = null;
 function App() {
+  const [onlyChords, setOnlyChords] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [instrument, setInstrument] = useState({ name: 'pipa', fileCount: 25 });
   const [bg, setBg] = useState('#415976');
@@ -36,10 +37,10 @@ function App() {
     // const delay = Math.floor(Math.random() * Math.floor(22)) * 1000;
     const delay = 0;
     setTimeout(() => {
-      const numberOfNotes = 1 + Math.floor(Math.random() * Math.floor(3));
+      const numberOfNotes = onlyChords ? 3 : 1 + Math.floor(Math.random() * Math.floor(3));
       let files = [];
       let offsets = [];
-      const offsetChoice = Math.floor(Math.random() * Math.floor(4));
+      const offsetChoice = onlyChords ? 0 : Math.floor(Math.random() * Math.floor(4));
       for (let i = 0; i < numberOfNotes; i++) {
         const fileNumber = 1 + Math.floor(Math.random() * Math.floor(instrument.fileCount));
         files[i] = `notes/${instrument.name}/${fileNumber}.mp3`;
@@ -66,7 +67,7 @@ function App() {
     if (playing) {
       interval = setInterval(playNotes, 7500);
     }
-  }, [instrument])
+  }, [instrument, onlyChords])
 
   const pause = () => {
     setPlaying(false);
@@ -75,7 +76,6 @@ function App() {
     second.current.audioEl.current.pause();
     first.current.audioEl.current.currentTime = 0;
     second.current.audioEl.current.currentTime = 0;
-    // console.log(interval);
     clearInterval(interval);
   }
 
@@ -94,22 +94,29 @@ function App() {
     <div className="App">
       <div style={{ background: bg }} className="container">
         {playing ? <img onClick={() => pause()} className="image" src={'tears.gif'} /> : <img onClick={() => play()} className="image" src={'tears.png'} />}
-        <div className="option-section">options</div>
-        <div className="instruments option-label">
-          <button className="instrument" style={{ textDecoration: (instrument.name === 'vibes' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'vibes', fileCount: 18 })}>
+        <div className="option-section">instrument</div>
+        <div className="option-label">
+          <button className="option" style={{ textDecoration: (instrument.name === 'vibes' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'vibes', fileCount: 18 })}>
             vibraphone
           </button>
-          <button className="instrument" style={{ textDecoration: (instrument.name === 'pipa' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'pipa', fileCount: 25 })}>
+          <button className="option" style={{ textDecoration: (instrument.name === 'pipa' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'pipa', fileCount: 25 })}>
             pipa
           </button>
-          <button className="instrument" style={{ textDecoration: (instrument.name === 'guzheng' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'guzheng', fileCount: 20 })}>
+          <button className="option" style={{ textDecoration: (instrument.name === 'guzheng' ? 'underline' : 'unset') }} onClick={() => setInstrument({ name: 'guzheng', fileCount: 20 })}>
             guzheng
           </button>
         </div>
         <div className="option-section">volume</div>
-        <div className="volume">
+        <div className="section">
           <label className="option-label">rain</label>
           <input type="range" min="0" max="1.0" step="0.01" value={rainVolume} onChange={onRainVolumeChange}></input>
+        </div>
+        <div>
+          <div className="option-section">only chords?</div>
+          <div className="option-label">
+            <span className="option option-label" onClick={() => setOnlyChords(!onlyChords)}>{onlyChords ? '[yup]' : 'yup'}</span>
+            <span className="option option-label" onClick={() => setOnlyChords(!onlyChords)}>{!onlyChords ? '[nope]' : 'nope'}</span>
+          </div>
         </div>
 
       </div>
